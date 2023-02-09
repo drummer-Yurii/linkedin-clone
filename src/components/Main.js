@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import PostModal from './PostModal';
+import { getArticleAPI } from "../actions";
 
 const Main = (props) => {
     const [showModal, setShowModal] = useState("close");
+
+    useEffect(() => {
+        props.getArticles();
+    }, []);
+
     const handleClick = (e) => {
         e.preventDefault();
         if (e.target !== e.currentTarget) {
@@ -302,11 +308,13 @@ const Content = styled.div`
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.artcleState.loading,
+        loading: state.articleState.loading,
         user: state.userState.user,
     };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+    getArticles: () => dispatch(getArticleAPI()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

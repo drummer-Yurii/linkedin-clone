@@ -97,3 +97,14 @@ export function postArticleAPI(payload) {
     };
 }
 
+export function getArticleAPI() {
+    return (dispatch) => {
+        let payload;
+
+        db.collection('articles').orderBy('actor.date', 'desc')
+        .onSnapshot((snapshot) => {
+            payload = snapshot.docs.map((doc) => doc.data());
+            console.log(payload);
+        });
+    };
+}
