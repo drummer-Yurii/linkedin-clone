@@ -102,7 +102,7 @@ export function postArticleAPI(payload) {
     };
 }
 
-export function getArticleAPI() {
+export function getArticlesAPI() {
     return (dispatch) => {
         let payload;
 

@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import PostModal from './PostModal';
-import { getArticleAPI } from "../actions";
+import { getArticlesAPI } from "../actions";
+import ReactPlayer from "react-player";
 
 const Main = (props) => {
     const [showModal, setShowModal] = useState("close");
@@ -86,7 +87,11 @@ const Main = (props) => {
                         <Description>{article.description}</Description>
                         <SharedImg>
                             <a>
-                                <img src="/images/shared-image.jpg" alt="" />
+                                {!article.sharedImg && article.video ? (
+                                    <ReactPlayer width={'100%'} url={article.video} />
+                                ) : (
+                                    article.sharedImg && <img src={article.sharedImg} />
+                                )}
                             </a>
                         </SharedImg>
                         <SocialCounts>
@@ -98,7 +103,7 @@ const Main = (props) => {
                                 </button>
                             </li>
                             <li>
-                                <a>2 comments</a>
+                                <a>{article.comments}</a>
                             </li>
                         </SocialCounts>
                         <SocialActions>
@@ -283,6 +288,8 @@ const SocialCounts = styled.ul`
         font-size: 12px;
         button {
             display: flex;
+            border: none;
+            background-color: white;
         }
     }
 `
@@ -298,6 +305,8 @@ const SocialActions = styled.div`
         align-items: center;
         padding: 8px;
         color: #0a66c2;
+        border: none;
+        background-color: white;
         @media (min-width: 768px) {
             span {
                 margin-left: 8px;
@@ -325,7 +334,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    getArticles: () => dispatch(getArticleAPI()),
+    getArticles: () => dispatch(getArticlesAPI()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
