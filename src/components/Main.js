@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import PostModal from './PostModal';
 
@@ -24,10 +25,15 @@ const Main = (props) => {
     return (
         <Container>
             <ShareBox>
-                Share
                 <div>
-                    <img src="/images/user.svg" alt="" />
-                    <button onClick={handleClick}>Start a post</button>
+                    {props.user && props.user.photoURL ? (
+                        <img src={props.user.photoURL} />
+                    ) : (
+                        <img src="/images/user.svg" alt="" />
+                    )}
+                    <button onClick={handleClick} disabled={props.loading ? true : false}>
+                        Start a post
+                    </button>
                 </div>
                 <div>
                     <button>
@@ -48,7 +54,8 @@ const Main = (props) => {
                     </button>
                 </div>
             </ShareBox>
-            <div>
+            <Content>
+                {props.loading && <img src='./images/spin-loader.svg' />}
                 <Article>
                     <SharedActor>
                         <a>
@@ -82,25 +89,25 @@ const Main = (props) => {
                         </li>
                     </SocialCounts>
                     <SocialActions>
-                    <button>
-                        <img src="/images/like-icon.svg" alt="" />
-                        <span>Like</span>
-                    </button>
-                    <button>
-                        <img src="/images/comments-icon.svg" alt="" />
-                        <span>Comments</span>
-                    </button>
-                    <button>
-                        <img src="/images/share-icon.svg" alt="" />
-                        <span>Share</span>
-                    </button>
-                    <button>
-                        <img src="/images/send-icon.svg" alt="" />
-                        <span>Send</span>
-                    </button>
+                        <button>
+                            <img src="/images/like-icon.svg" alt="" />
+                            <span>Like</span>
+                        </button>
+                        <button>
+                            <img src="/images/comments-icon.svg" alt="" />
+                            <span>Comments</span>
+                        </button>
+                        <button>
+                            <img src="/images/share-icon.svg" alt="" />
+                            <span>Share</span>
+                        </button>
+                        <button>
+                            <img src="/images/send-icon.svg" alt="" />
+                            <span>Send</span>
+                        </button>
                     </SocialActions>
                 </Article>
-            </div>
+            </Content>
             <PostModal showModal={showModal} handleClick={handleClick} />
         </Container>
     )
@@ -286,5 +293,20 @@ const SocialActions = styled.div`
         }
     }
 `
+const Content = styled.div`
+    text-align: center;
+    & > img {
+        width: 30px;
+    }
+`
 
-export default Main;
+const mapStateToProps = (state) => {
+    return {
+        loading: state.artcleState.loading,
+        user: state.userState.user,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
